@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+ipath= # set custom path here
+mkdir ProblemDB
+dbpath=ProblemDB$ipath
+
+topics=("Algebra" "Combinatorics" "NumberTheory" "Geometry" "CalculusAnalysis")
+
+for topic in ${topics[*]}; do
+	mkdir $dbpath/$topic
+	subPath=$dbpath/$topic
+	for i in 1 2 3 4 5; do
+		mkdir $subPath/Difficulty_${i}of5
+	done
+done

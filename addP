@@ -1,0 +1,42 @@
+#!/bin/bash
+
+echo -e "\nEnter topic [alg/combo/ntheory/geo/calc]\n" 
+declare -A topics=([alg]=Algebra [combo]=Combinatorics [ntheory]=NumberTheory [geo]=Geometry [calc]=CalculusAnalysis)
+read top
+
+while [ $top != alg ] && [ $top != combo ] && [ $top != ntheory ] && [ $top != geo ] && [ $top != calc ]; do
+	echo -e "\nInvalid Entry"
+	echo -e "Enter topic [alg/combo/ntheory/geo/calc]\n" 
+	read top
+done
+
+echo -e "\nEnter difficulty  [scale from 1-5]\n"
+declare -A difficulties=([1]=Difficulty_1of5 [2]=Difficulty_2of5 [3]=Difficulty_3of5 [4]=Difficulty_4of5 [5]=Difficulty_5of5)
+read dif
+
+
+while [ $dif -ne 1 ] && [ $dif -ne 2 ] && [ $dif -ne 3 ] && [ $dif -ne 4 ] && [ $dif -ne 5 ]; do
+	echo -e "\nInvalid Entry"
+	echo -e "\nEnter difficulty  [scale from 1-5]\n"
+	read dif
+done
+
+echo -e "\nEnter problem source\n"
+read src
+
+echo -e "\nEnter problem name\n"
+read nme
+
+mkdir ProblemDB/${topics[$top]}/${difficulties[$dif]}/${src}_$nme
+touch info problem solution
+
+echo -e "\nEnter a brief desctiption [enter a new line and press CTRL+d to exit]\n"
+cat >> ProblemDB/${topics[$top]}/${difficulties[$dif]}/${src}_$nme/info
+
+echo -e "\nWrite the problem statement [enter a new line and press CTRL+d to exit]\n"
+cat >> ProblemDB/${topics[$top]}/${difficulties[$dif]}/${src}_$nme/problem
+
+echo -e "\nWrite the solution [enter a new line and press CTRL+d to exit]\n"
+cat >> ProblemDB/${topics[$top]}/${difficulties[$dif]}/${src}_$nme/solution
+
+echo -e "\nEntry created successfully!"

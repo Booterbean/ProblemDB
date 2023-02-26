@@ -1,0 +1,60 @@
+#!/bin/bash
+
+echo -e "\nSearch by keyword\n"
+read phrase
+readarray -t results < <(dirname $(grep -Ril "$phrase" .))
+declare results
+
+
+declare filtd_results
+declare only_info
+
+unset dupes # ensure it's empty
+declare -A dupes
+
+for i in "${results[@]}"; do
+    if [[ -z ${dupes[$i]} ]]; then
+		filtd_results+=("$i")
+		only_info+=("$(cat $i/info)")
+    fi
+    dupes["$i"]=1
+done
+unset dupes
+
+#translation
+declare tags
+declare -A topic_translation=(["/Algebra/"]=A ["/NumberTheory/"]=N ["/Combinatorics/"]=C ["/Geometry/"]=G ["/CalculusAnalysis/"]=CA)
+
+declare -A dif_translation=(["/Difficulty_1of5/"]=1 ["/Difficulty_2of5/"]=2 ["/Difficulty_3of5/"]=3 ["/Difficulty_4of5/"]=4 ["/Difficulty_5of5/"]=5)
+
+
+for j in ${!filtd_results[@]}
+do
+	tag=""
+	for k in ${!topic_translation[@]}
+	do
+		if [[ "${filtd_results[j]}" == *$k* ]]
+		then
+			tag=${tag}${topic_translation[$k]}"-"
+		fi
+	done
+
+	for q in ${!dif_translation[@]}
+	do
+		if [[ "${filtd_results[j]}" == *$q* ]]
+		then
+			tag=${tag}${dif_translation[$q]}
+		fi
+	done
+	tags+=($tag)
+done
+
+lred='\033[1;31m'
+lgreen='\033[1;32m'
+yellow='\033[1;33m'
+
+echo -e "\nResults:"
+
+for i in ${!only_info[@]}; do
+	echo -e "$lred Problem: ${tags[$i]}""-"$(basename ${filtd_results[$i]})"$lgreen:" "$yellow ${only_info[$i]}"
+done
